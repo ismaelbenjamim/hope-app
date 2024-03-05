@@ -1,5 +1,6 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
+import { Session } from 'next-auth/types';
 
 declare module 'next-auth' {
   interface Session {
@@ -10,12 +11,21 @@ declare module 'next-auth' {
   }
 }
 
+export const userMock: Session = {
+  user: {
+    id: '1', // Id do usuário
+    name: 'Ismael Benjamim', // Nome do usuário
+    email: 'ibsb@cin.ufpe.br', // Endereço de e-mail do usuário
+  },
+  expires: '90000'
+};
+
 export const {
   handlers: { GET, POST },
   auth
 } = NextAuth({
-  providers: [GitHub],
-  callbacks: {
+  providers: [], //GitHub
+  /*callbacks: {
     jwt({ token, profile }) {
       if (profile) {
         token.id = profile.id
@@ -35,5 +45,5 @@ export const {
   },
   pages: {
     signIn: '/sign-in' // overrides the next-auth default signin page https://authjs.dev/guides/basics/pages
-  }
+  }*/
 })

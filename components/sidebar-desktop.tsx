@@ -1,10 +1,10 @@
 import { Sidebar } from '@/components/sidebar'
 
-import { auth } from '@/auth'
+import { auth, userMock } from '@/auth'
 import { ChatHistory } from '@/components/chat-history'
 
 export async function SidebarDesktop() {
-  const session = await auth()
+  const session = userMock;
 
   if (!session?.user?.id) {
     return null

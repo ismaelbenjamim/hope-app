@@ -14,7 +14,7 @@ const openai = new OpenAI({
 export async function POST(req: Request) {
   const json = await req.json()
   const { messages, previewToken } = json
-  const userId = (await auth())?.user.id
+  const userId = 1//(await auth())?.user.id
 
   if (!userId) {
     return new Response('Unauthorized', {
@@ -27,9 +27,9 @@ export async function POST(req: Request) {
   }
 
   const res = await openai.chat.completions.create({
-    model: 'gpt-3.5-turbo',
+    model: 'gpt-4',
     messages,
-    temperature: 0.7,
+    temperature: 0.2,
     stream: true
   })
 

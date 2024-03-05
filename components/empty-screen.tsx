@@ -6,36 +6,31 @@ import { IconArrowRight } from '@/components/ui/icons'
 
 const exampleMessages = [
   {
-    heading: 'Explain technical concepts',
-    message: `What is a "serverless function"?`
+    heading: 'Explorar Insights de Saúde',
+    message: 'Você pode fornecer insights sobre como manter um estilo de vida equilibrado e saudável?'
   },
   {
-    heading: 'Summarize an article',
-    message: 'Summarize the following article for a 2nd grader: \n'
+    heading: 'Dicas de Bem-Estar',
+    message: 'Compartilhe algumas dicas de bem-estar para melhorar a saúde mental e física.'
   },
   {
-    heading: 'Draft an email',
-    message: `Draft an email to my boss about the following: \n`
+    heading: 'Recomendações de Saúde Personalizadas',
+    message: 'Quais recomendações de saúde personalizadas você tem para mim com base no meu perfil?'
   }
-]
+];
 
 export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
   return (
     <div className="mx-auto max-w-2xl px-4">
       <div className="rounded-lg border bg-background p-8">
         <h1 className="mb-2 text-lg font-semibold">
-          Welcome to Next.js AI Chatbot!
+          Bem vindo ao HopeIA
         </h1>
         <p className="mb-2 leading-normal text-muted-foreground">
-          This is an open source AI chatbot app template built with{' '}
-          <ExternalLink href="https://nextjs.org">Next.js</ExternalLink> and{' '}
-          <ExternalLink href="https://vercel.com/storage/kv">
-            Vercel KV
-          </ExternalLink>
-          .
+        Estamos extremamente felizes em recebê-lo(a) em nossa plataforma dedicada à saúde.
         </p>
         <p className="leading-normal text-muted-foreground">
-          You can start a conversation here or try the following examples:
+        Na HopeIA, acreditamos que cada passo em direção ao bem-estar é uma jornada única e valiosa. Nossa inteligência artificial foi criada com o propósito de apoiar, informar e inspirar você em sua busca por uma vida saudável e equilibrada
         </p>
         <div className="mt-4 flex flex-col items-start space-y-2">
           {exampleMessages.map((message, index) => (
