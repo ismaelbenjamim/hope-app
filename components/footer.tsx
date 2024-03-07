@@ -12,9 +12,7 @@ export function FooterText({ className, ...props }: React.ComponentProps<'p'>) {
       )}
       {...props}
     >
-      HopeIA Created by Ismael Benjamim, Tiago Bello e Bárbara Vaz{' '}
-      <ExternalLink href="#">HopeIA</ExternalLink>
-      .
+      HopeIA Created by Ismael Benjamim, Tiago Bello e Bárbara Vaz.
     </p>
   )
 }

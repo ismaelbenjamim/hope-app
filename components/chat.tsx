@@ -35,9 +35,21 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     'ai-token',
     null
   )
+
+  const outputAudio = () => {
+    console.log(messages);
+    const ultimoElemento: Message = messages[messages.length - 1];
+    let utterance = new SpeechSynthesisUtterance(ultimoElemento.content)
+    console.log(ultimoElemento.content);
+    let voicesArray = speechSynthesis.getVoices()
+    utterance.voice = voicesArray[2]
+    utterance.lang = "pt-BR";
+    speechSynthesis.speak(utterance)
+  }
+
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
-  const { messages, append, reload, stop, isLoading, input, setInput } =
+  const { messages, append, reload, stop, isLoading, input, setInput, handleInputChange } =
     useChat({
       initialMessages,
       id,
@@ -45,7 +57,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         id,
         previewToken
       },
-      onResponse(response) {
+      async onResponse(response) {
         if (response.status === 401) {
           toast.error(response.statusText)
         }
@@ -54,6 +66,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         if (!path.includes('chat')) {
           window.history.pushState({}, '', `/chat/${id}`)
         }
+        outputAudio();
       }
     })
   return (

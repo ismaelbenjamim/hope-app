@@ -53,6 +53,7 @@ export async function POST(req: Request) {
           }
         ]
       }
+      
       await kv.hmset(`chat:${id}`, payload)
       await kv.zadd(`user:chat:${userId}`, {
         score: createdAt,
