@@ -16,7 +16,7 @@ import {
   DialogHeader,
   DialogTitle
 } from '@/components/ui/dialog'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { Button } from './ui/button'
 import { Input } from './ui/input'
 import { toast } from 'react-hot-toast'
@@ -37,19 +37,17 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
   )
 
   const outputAudio = () => {
-    console.log(messages);
     const ultimoElemento: Message = messages[messages.length - 1];
-    let utterance = new SpeechSynthesisUtterance(ultimoElemento.content)
-    console.log(ultimoElemento.content);
-    let voicesArray = speechSynthesis.getVoices()
-    utterance.voice = voicesArray[2]
-    utterance.lang = "pt-BR";
-    speechSynthesis.speak(utterance)
+    let utter = new SpeechSynthesisUtterance(ultimoElemento.content); // responsável pelo que vai falar!
+    let voices = speechSynthesis.getVoices(); // armazena as vozes no array
+    utter.voice = voices[0]; // define qual será a voz..
+    utter.lang = 'pt-BR';
+    speechSynthesis.speak(utter); // reproduz o audio!
   }
 
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
   const [previewTokenInput, setPreviewTokenInput] = useState(previewToken ?? '')
-  const { messages, append, reload, stop, isLoading, input, setInput, handleInputChange } =
+  const { messages, append, reload, stop, isLoading, input, setInput } =
     useChat({
       initialMessages,
       id,
@@ -66,9 +64,14 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         if (!path.includes('chat')) {
           window.history.pushState({}, '', `/chat/${id}`)
         }
-        outputAudio();
       }
     })
+    React.useEffect(() => {
+      if (!isLoading && messages.length) {
+        outputAudio();
+      }
+    }, [isLoading]);
+  
   return (
     <>
       <div className={cn('pb-[200px] pt-4 md:pt-10', className)}>
