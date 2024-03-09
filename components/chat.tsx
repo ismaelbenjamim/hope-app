@@ -35,14 +35,19 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     'ai-token',
     null
   )
+  const [onAudio, setOnAudio] = useState<boolean>(false)
 
   const outputAudio = () => {
+    setOnAudio(true);
     const ultimoElemento: Message = messages[messages.length - 1];
-    let utter = new SpeechSynthesisUtterance(ultimoElemento.content); // responsável pelo que vai falar!
-    let voices = speechSynthesis.getVoices(); // armazena as vozes no array
-    utter.voice = voices[0]; // define qual será a voz..
+    let utter = new SpeechSynthesisUtterance(ultimoElemento.content);
+    let voices = speechSynthesis.getVoices();
+    utter.voice = voices[19];
     utter.lang = 'pt-BR';
-    speechSynthesis.speak(utter); // reproduz o audio!
+    speechSynthesis.speak(utter);
+    utter.onend = (event) => {
+      setOnAudio(false);
+    }
   }
 
   const [previewTokenDialog, setPreviewTokenDialog] = useState(IS_PREVIEW)
@@ -93,6 +98,8 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
         messages={messages}
         input={input}
         setInput={setInput}
+        OnAudio={onAudio}
+        setOnAudio={setOnAudio}
       />
 
       <Dialog open={previewTokenDialog} onOpenChange={setPreviewTokenDialog}>

@@ -78,7 +78,16 @@ export function PromptForm({
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
         <div className="absolute right-0 top-4 sm:right-4">
-        <Microphone onAudio={setInput} onSubmit={onSubmit} />
+          <div className="flex">
+            <div className="pe-2">
+              <Microphone onAudio={setInput} onSubmit={onSubmit} />
+            </div>
+            <div className="pe-2">
+              <Button type='button' variant={'default'}>
+                <IconPlus></IconPlus>
+              </Button>
+            </div>
+          </div>
         </div>
       </div>
     </form>

@@ -22,6 +22,8 @@ export interface ChatPanelProps
   > {
   id?: string
   title?: string
+  OnAudio?: boolean
+  setOnAudio: (value: boolean) => void
 }
 
 export function ChatPanel({
@@ -34,6 +36,8 @@ export function ChatPanel({
   input,
   setInput,
   messages,
+  OnAudio,
+  setOnAudio,
 }: ChatPanelProps) {
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
 
@@ -42,6 +46,14 @@ export function ChatPanel({
       <ButtonScrollToBottom />
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         <div className="flex items-center justify-center h-12">
+          {OnAudio ? (
+            <Button variant="destructive" onClick={() => setOnAudio(!OnAudio)}>
+              <IconStop className="mr-2" />
+              Parar execução do áudio
+            </Button>
+          ) : (
+            <></>
+          )}
           {isLoading ? (
             <Button
               variant="outline"
@@ -56,7 +68,7 @@ export function ChatPanel({
               <div className="flex space-x-2">
                 <Button variant="outline" onClick={() => reload()}>
                   <IconRefresh className="mr-2" />
-                  Regenerate response
+                  Regerar a resposta
                 </Button>
                 {id && title ? (
                   <>
