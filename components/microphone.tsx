@@ -1,6 +1,5 @@
 'use client'
 
-import { useRecordVoice } from '@/app/hooks/useRecordVoice'
 import { IconMicrophone } from './ui/icon-microphone'
 import React, { useState } from 'react'
 import { Button } from './ui/button'
@@ -9,9 +8,23 @@ import { IconDownload, IconStop } from './ui/icons'
 interface MicrophoneProps {
   onAudio: (value: any) => void
   onSubmit: (value: any) => void
+  isListening: boolean
+  setListening: (value: any) => void
+  isListeningRef: any
+  text: string
+  setText: (value: string) => void
 }
 
-const Microphone: React.FC<MicrophoneProps> = ({ onAudio, onSubmit }) => {
+const Microphone: React.FC<MicrophoneProps> = ({ 
+  onAudio, 
+  onSubmit, 
+  isListening,
+  setListening,
+  isListeningRef,
+  text,
+  setText
+}) => {
+
   if (!window.SpeechRecognition) {
     if (!window.webkitSpeechRecognition) {
       return (
@@ -33,14 +46,6 @@ const Microphone: React.FC<MicrophoneProps> = ({ onAudio, onSubmit }) => {
   recognition.continuous = true
   recognition.interimResults = true
   recognition.lang = 'pt-BR'
-
-  const [isListening, setListening] = useState<boolean>(false)
-  const isListeningRef = React.useRef(isListening)
-  const [text, setText] = useState<string>('')
-
-  React.useEffect(() => {
-    isListeningRef.current = isListening
-  }, [isListening])
 
   const handleStart = async () => {
     setListening(true)
@@ -71,25 +76,7 @@ const Microphone: React.FC<MicrophoneProps> = ({ onAudio, onSubmit }) => {
   recognition.onend = event => {
     handleStop()
   }
-
-  /*React.useEffect(() => {
-    if (isListening) {
-      console.log('ouvindo')
-      handleStart();
-    } else {
-      console.log('parando')
-      handleStop();
-    }
-  }, [isListening])*/
-
-  React.useEffect(() => {
-    onAudio(text)
-    if (text && !isListening) {
-      onSubmit(text)
-      setText('')
-    }
-  }, [text, isListening, onAudio])
-
+  
   return (
     <div className="flex flex-col justify-center items-center">
       <Button

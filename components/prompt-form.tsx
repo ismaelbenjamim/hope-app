@@ -30,6 +30,9 @@ export function PromptForm({
   const [ showNotSupported, setShowNotSupported ] = React.useState<boolean>(false)
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
+  const [isListening, setListening] = React.useState<boolean>(false)
+  const isListeningRef = React.useRef(isListening)
+  const [text, setText] = React.useState<string>('')
 
   React.useEffect(() => {
     if (inputRef.current) {
@@ -48,6 +51,20 @@ export function PromptForm({
     }
   }, []);
 
+  
+  React.useEffect(() => {
+    isListeningRef.current = isListening
+  }, [isListening])
+
+  
+  React.useEffect(() => {
+    setInput(text)
+    if (text && !isListening) {
+      onSubmit(text)
+      setText('')
+    }
+  }, [text, isListening, setInput])
+
   return (
     <form
       onSubmit={async e => {
@@ -56,6 +73,8 @@ export function PromptForm({
           return
         }
         setInput('')
+        setText('')
+        setListening(false)
         await onSubmit(input)
       }}
       ref={formRef}
@@ -99,7 +118,15 @@ export function PromptForm({
         <div className="absolute right-0 top-4 sm:right-4">
           <div className="flex">
             <div className="pe-2">
-              <Microphone onAudio={setInput} onSubmit={onSubmit} />
+              <Microphone 
+              onAudio={setInput} 
+              onSubmit={onSubmit} 
+              isListening={isListening}
+              setListening={setListening}
+              isListeningRef={isListeningRef}
+              text={text}
+              setText={setText}
+              />
             </div>
             <div className="pe-2">
               <Tooltip>
