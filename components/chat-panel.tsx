@@ -94,7 +94,7 @@ export function ChatPanel({
                 variant="default"
                 onClick={() => setAudioState(AudioState.RESTART)}
               >
-                <IconStop className="mr-2" />
+                <IconRefresh className="mr-2" />
                 Recomeçar áudio
               </Button>
           )}
