@@ -1,6 +1,7 @@
 import NextAuth, { type DefaultSession } from 'next-auth'
 import GitHub from 'next-auth/providers/github'
 import { Session } from 'next-auth/types';
+import { kv } from '@vercel/kv'
 
 declare module 'next-auth' {
   interface Session {

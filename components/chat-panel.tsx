@@ -5,9 +5,23 @@ import { shareChat } from '@/app/actions'
 import { Button } from '@/components/ui/button'
 import { PromptForm } from '@/components/prompt-form'
 import { ButtonScrollToBottom } from '@/components/button-scroll-to-bottom'
-import { IconRefresh, IconShare, IconStop } from '@/components/ui/icons'
+import {
+  IconPause,
+  IconRefresh,
+  IconResume,
+  IconShare,
+  IconStop
+} from '@/components/ui/icons'
 import { FooterText } from '@/components/footer'
 import { ChatShareDialog } from '@/components/chat-share-dialog'
+
+export enum AudioState {
+  INATIVE = 0,
+  PAUSE = 1,
+  CONTINUE = 2,
+  STOP = 3,
+  RESTART = 4,
+}
 
 export interface ChatPanelProps
   extends Pick<
@@ -24,6 +38,8 @@ export interface ChatPanelProps
   title?: string
   OnAudio?: boolean
   setOnAudio: (value: boolean) => void
+  audioState?: AudioState
+  setAudioState: (value: AudioState) => void
 }
 
 export function ChatPanel({
@@ -38,6 +54,8 @@ export function ChatPanel({
   messages,
   OnAudio,
   setOnAudio,
+  audioState,
+  setAudioState
 }: ChatPanelProps) {
   const [shareDialogOpen, setShareDialogOpen] = React.useState(false)
 
@@ -47,12 +65,38 @@ export function ChatPanel({
       <div className="mx-auto sm:max-w-2xl sm:px-4">
         <div className="flex items-center justify-center h-12">
           {OnAudio ? (
-            <Button variant="destructive" onClick={() => setOnAudio(!OnAudio)}>
-              <IconStop className="mr-2" />
-              Parar execução do áudio
-            </Button>
+            <>
+              <Button
+                className="mr-1"
+                variant="outline"
+                onClick={() => setAudioState(AudioState.PAUSE)}
+              >
+                <IconPause />
+              </Button>
+              <Button
+                className="mr-1"
+                variant="outline"
+                onClick={() => setAudioState(AudioState.CONTINUE)}
+              >
+                <IconResume />
+              </Button>
+              <Button
+                className="mr-1"
+                variant="destructive"
+                onClick={() => setAudioState(AudioState.STOP)}
+              >
+                <IconStop />
+              </Button>
+            </>
           ) : (
-            <></>
+            messages?.length >= 2 && audioState == AudioState.STOP && <Button
+                className="mr-1"
+                variant="default"
+                onClick={() => setAudioState(AudioState.RESTART)}
+              >
+                <IconStop className="mr-2" />
+                Recomeçar áudio
+              </Button>
           )}
           {isLoading ? (
             <Button

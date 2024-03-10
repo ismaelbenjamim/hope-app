@@ -12,6 +12,7 @@ import {
 import { IconArrowElbow, IconPlus } from '@/components/ui/icons'
 import { useRouter } from 'next/navigation'
 import { Microphone } from './microphone'
+import { Badge } from './ui/badge'
 
 export interface PromptProps
   extends Pick<UseChatHelpers, 'input' | 'setInput'> {
@@ -26,13 +27,26 @@ export function PromptForm({
   isLoading
 }: PromptProps) {
   const { formRef, onKeyDown } = useEnterSubmit()
+  const [ showNotSupported, setShowNotSupported ] = React.useState<boolean>(false)
   const inputRef = React.useRef<HTMLTextAreaElement>(null)
   const router = useRouter()
+
   React.useEffect(() => {
     if (inputRef.current) {
       inputRef.current.focus()
     }
   }, [])
+
+  React.useEffect(() => {
+    if (!window.SpeechRecognition) {
+      if (!window.webkitSpeechRecognition) {
+        setShowNotSupported(true);
+        setTimeout(() => {
+          setShowNotSupported(false);
+        }, 7000)
+      }
+    }
+  }, []);
 
   return (
     <form
@@ -46,6 +60,11 @@ export function PromptForm({
       }}
       ref={formRef}
     >
+      {showNotSupported && (
+        <div className="flex h-full items-center justify-center p-1 mb-3">
+        <Badge variant="destructive" className='justify-center'>Reconhecimento de voz não é suportado por este navegador</Badge>
+        </div>
+      )}
       <div className="relative flex flex-col w-full px-8 overflow-hidden max-h-60 grow bg-background sm:rounded-md sm:border sm:px-12">
         <Tooltip>
           <TooltipTrigger asChild>
@@ -61,10 +80,10 @@ export function PromptForm({
               )}
             >
               <IconPlus />
-              <span className="sr-only">New Chat</span>
+              <span className="sr-only">Nova Conversa</span>
             </button>
           </TooltipTrigger>
-          <TooltipContent>New Chat</TooltipContent>
+          <TooltipContent>Nova Conversa</TooltipContent>
         </Tooltip>
         <Textarea
           ref={inputRef}
@@ -73,7 +92,7 @@ export function PromptForm({
           rows={1}
           value={input}
           onChange={e => setInput(e.target.value)}
-          placeholder="Send a message."
+          placeholder="Envie uma mensagem."
           spellCheck={false}
           className="min-h-[60px] w-full resize-none bg-transparent px-4 py-[1.3rem] focus-within:outline-none sm:text-sm"
         />
@@ -83,9 +102,19 @@ export function PromptForm({
               <Microphone onAudio={setInput} onSubmit={onSubmit} />
             </div>
             <div className="pe-2">
-              <Button type='button' variant={'default'}>
-                <IconPlus></IconPlus>
-              </Button>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <Button
+                    type="submit"
+                    size="icon"
+                    disabled={isLoading || input === ''}
+                  >
+                    <IconArrowElbow />
+                    <span className="sr-only">Enviar mensagem</span>
+                  </Button>
+                </TooltipTrigger>
+                <TooltipContent>Enviar mensagem</TooltipContent>
+              </Tooltip>
             </div>
           </div>
         </div>
