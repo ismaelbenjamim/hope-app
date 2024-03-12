@@ -51,7 +51,7 @@ export function Chat({ id, initialMessages, className }: ChatProps) {
     await EasySpeech.init(request)
     await EasySpeech.speak({
       text: ultimoElemento.content,
-      voice: EasySpeech.voices()[19],
+      voice: EasySpeech.voices()[0],
       infiniteResume: true,
       start: event => {
         setAudioState(AudioState.CONTINUE)
