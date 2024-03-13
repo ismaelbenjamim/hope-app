@@ -2,10 +2,7 @@ import { UseChatHelpers } from 'ai/react'
 
 import { Button } from '@/components/ui/button'
 import { ExternalLink } from '@/components/external-link'
-import { IconArrowRight, IconPause, IconRefresh, IconResume, IconStop } from '@/components/ui/icons'
-import React from 'react';
-import EasySpeech from 'easy-speech';
-import { AudioState } from './chat-panel';
+import { IconArrowRight } from '@/components/ui/icons'
 
 const exampleMessages = [
   {
@@ -23,58 +20,6 @@ const exampleMessages = [
 ];
 
 export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
-
-  const [audioState, setAudioState] = React.useState<AudioState>(AudioState.INATIVE)
-
-  const request: any = {
-    maxTimeout: 5000,
-    interval: 1,
-    quiet: true
-  }
-
-  const outputAudio = async () => {
-    const text = "Bem vindo ao HopeIA, uma Inteligência artificial de Saúde. Estamos extremamente felizes em recebê-lo(a) em nossa plataforma dedicada à saúde. Na HopeIA, acreditamos que cada passo em direção ao bem-estar é uma jornada única e valiosa. Nossa inteligência artificial foi criada com o propósito de apoiar, informar e inspirar você em sua busca por uma vida saudável e equilibrada. Faça uma pergunta usando o chat ou pressione o botão de voz"
-    await EasySpeech.init(request)
-    await EasySpeech.speak({
-      text: text,
-      voice: EasySpeech.voices()[0],
-      infiniteResume: true,
-      start: event => {
-        setAudioState(AudioState.CONTINUE)
-      },
-      end: event => {
-        setAudioState(AudioState.STOP)
-      }
-    })
-      .then()
-      .catch(e => {})
-  }
-
-  const verifyAudio = async () => {
-    await EasySpeech.init(request);
-    if (audioState == AudioState.INATIVE) {
-      await EasySpeech.pause()
-      await EasySpeech.cancel()
-    } else if (audioState == AudioState.CONTINUE) {
-      await EasySpeech.resume()
-    } else if (audioState == AudioState.PAUSE) {
-      await EasySpeech.pause()
-    } else if (audioState == AudioState.STOP) {
-      await EasySpeech.pause()
-      await EasySpeech.cancel()
-    } else if (audioState == AudioState.RESTART) {
-      await outputAudio()
-    }
-  }
-
-  React.useEffect(() => {
-    verifyAudio()
-  }, [audioState])
-
-  React.useEffect(() => {
-    outputAudio()
-  }, [])
-
   return (
     <div className="mx-auto max-w-2xl px-4">
       <div className="rounded-lg border bg-background p-8">
@@ -99,41 +44,6 @@ export function EmptyScreen({ setInput }: Pick<UseChatHelpers, 'setInput'>) {
               {message.heading}
             </Button>
           ))}
-        </div>
-        <div className="flex items-center justify-center h-12">
-        {audioState in [AudioState.CONTINUE, AudioState.PAUSE, AudioState.RESTART] ? (
-            <>
-              <Button
-                className="mr-1"
-                variant="outline"
-                onClick={() => setAudioState(AudioState.PAUSE)}
-              >
-                <IconPause />
-              </Button>
-              <Button
-                className="mr-1"
-                variant="outline"
-                onClick={() => setAudioState(AudioState.CONTINUE)}
-              >
-                <IconResume />
-              </Button>
-              <Button
-                className="mr-1"
-                variant="destructive"
-                onClick={() => setAudioState(AudioState.STOP)}
-              >
-                <IconStop />
-              </Button>
-            </>
-          ) : (
-            audioState == AudioState.STOP && <Button
-                className="mr-1"
-                variant="default"
-                onClick={() => setAudioState(AudioState.RESTART)}
-              >
-                <IconResume />
-              </Button>
-          )}
         </div>
       </div>
     </div>
